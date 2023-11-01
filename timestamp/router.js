@@ -1,19 +1,25 @@
 import express from "express";
-import { studentsData } from "./controller.js";
-import { newstudentsData } from "./controller.js";
+import {
+  editStudents,
+  studentsData,
+  newstudentsData,
+  postnewStudents,
+  deleteStudents,
+} from "./controller.js";
 
 const router = express.Router();
 
-// get all students data...
+// get all students data by request query...
 
 router.get("/all", async (req, resp) => {
   try {
+    // request from query  ?=
     const requestquery = req.query;
 
     const students = await studentsData(requestquery);
     console.log(requestquery);
 
-    if (!students) {
+    if (!students.length === 0) {
       return resp.status(400).json({ message: "No data available" });
     }
 
@@ -38,4 +44,61 @@ router.get("/respstu/:id", async (req, resp) => {
   }
 });
 
+router.post("/new", async (req, resp) => {
+  try {
+    const result = req.body;
+    console.log(result);
+    // if there is no data provided on the req.body
+    if (!result) {
+      return resp.json({ message: "no data provided" });
+    }
+
+    const newstudents = await postnewStudents(result);
+
+    if (!newstudents) {
+      return resp.json({ message: "error in data posting" });
+    }
+
+    resp.status(201).json({ data: newstudents });
+  } catch (error) {
+    return resp.status(500).json({ message: "internal server error", error });
+  }
+});
+
+router.put("/edit/:params", async (req, resp) => {
+  try {
+    const { params } = req.params;
+    const bodyMsg = req.body;
+
+    if (!params || !bodyMsg) {
+      resp.json({ message: "no Data was recieved to update" });
+    }
+
+    const updateStud = await editStudents(params, bodyMsg);
+
+    resp.json({ data: updateStud });
+  } catch (error) {
+    return resp.status(500).json({ message: "internal server error", error });
+  }
+});
+
+router.delete("/delete/:id", async (req, resp) => {
+  try {
+    const { id } = req.params;
+    console.log(id);
+
+    if (!id) {
+      resp.status({ message: "provide valid information" });
+    }
+    const deletedData = await deleteStudents(id);
+
+    resp.json({ data: deletedData });
+  } catch (error) {
+    return resp.json({ message: "internal server error", error });
+  }
+});
+
 export const studentsRouter = router;
+
+// password / LiP248jtag9q7CCD
+// us name / deepakbakyalakshmi1997

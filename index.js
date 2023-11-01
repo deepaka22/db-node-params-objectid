@@ -1,7 +1,9 @@
 import express from "express";
-import { client } from "./db.js";
+// import { client } from "./db.js";
 // import { studentsData } from "./timestamp/controller.js";
 import { studentsRouter } from "./timestamp/router.js";
+
+import dotenv from "dotenv";
 
 // import {client} from "./timestamp/controller"
 
@@ -9,16 +11,17 @@ import { studentsRouter } from "./timestamp/router.js";
 // import { dbconnection } from "./db.js";
 
 const app = express();
+dotenv.config();
 
-const PORT = 9000;
+const PORT = process.env.PORT;
 
 app.listen(PORT, () => {
   console.log(`Server started in local host ${PORT}`);
 });
 
-app.get("/", (req, resp) => {
-  resp.send(client);
-});
+// app.get("/", (req, resp) => {
+//   resp.send(clienst);
+// });
 
 app.use(express.json());
 
