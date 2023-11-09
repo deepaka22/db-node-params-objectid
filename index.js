@@ -22,7 +22,7 @@ app.listen(PORT, () => {
 // app.get("/", (req, resp) => {
 //   resp.send(clienst);
 // });
-
+// middle ware..
 app.use(express.json());
 
 app.use("/students", studentsRouter);
